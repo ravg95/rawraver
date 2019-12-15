@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RaWaver</title>
+    <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css" rel="stylesheet">
+
+    <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+  <style>
+    .box__file,
+    .box__uploading,
+    .box__success,
+    .box__error {
+      display: none;
+    }
+
+    .box{
+      width: 450px;
+      height: 90px;
+      display: none;
+    }
+
+    .box__input {
+      width: 450px;
+      height: 90px;
+      display: table-cell;
+       text-align: center;
+       vertical-align: middle;
+    }
+
+    .box.has-advanced-upload {
+      background-color: white;
+      outline: 2px dashed black;
+      outline-offset: -10px;
+    }
+    .box.has-advanced-upload .box__dragndrop {
+      display: inline;
+    }
+    .box.is-dragover {
+      background-color: lightGrey;
+    }
+
+    .box.is-uploading .box__input {
+      visibility: none;
+    }
+    .box.is-uploading .box__uploading {
+      display: block;
+    }
+
+    body {
+      background-repeat:   no-repeat;
+      background-position: center end;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+  </style>
+
+</head>
+<body onload="loadFiles(1)">
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Your music-files library</h1>
+      <nav aria-label="breadcrumb">
+        <div class="breadcrumb" id = "navigation">
+        </div>
+      </nav>
+      <div class="list-group" id="files"> </div>
+      <div id="addPlace"></div>
+    </div>
+
+    <div class="modal fade" id="#info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+          <div class="modal-body">
+            <form id="addForm" method = "post" enctype="multipart/form-data">
+              <div class="container" id = "infoText"></div>
+              <div id="dispUpld"></div>
+              <div id="box" class="box" style="margin-top: 10px;">
+                  <div class="box__input">
+                    <input class="box__file" type="file" name="file" id="file" data-multiple-caption="{count} files selected" multiple />
+                    <label for="file" id="boxLabel"><strong>Choose a file</strong><span class="box__dragndrop" id = "dropbox"> or drag it here</span>.</label>
+                  </div>
+                  <div class="box__uploading">Uploading&hellip;</div>
+                  <div class="box__success">Done!</div>
+                  <div class="box__error">Error! <span></span>.</div>
+              </div>
+            </form>
+
+            <div id="playerId"> <audio id="player"></div>
+          </div>
+          <div class="modal-footer" id="infoFooter"></div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+<script src="scripts.js"></script>
+</body>
+</html>

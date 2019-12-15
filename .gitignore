@@ -5,3 +5,6 @@ __pycache__/
 local_settings.py
 db.sqlite3
 venv/
+storage/
+migrations
+.DS_Store

@@ -6,7 +6,7 @@ class Item(db.Model):
     __tablename__ = "file"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text())
-    directory_id = db.Column(db.Integer, db.ForeignKey('dir.id'), nullable = False)
+    directory_id = db.Column(db.Integer, db.ForeignKey('dir.id', ondelete='CASCADE'), nullable = False)
     title = db.Column(db.Text())
     artist = db.Column(db.Text())
     year = db.Column(db.Integer)
@@ -24,10 +24,23 @@ class Item(db.Model):
         self.format = format
         self.size = size
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'directory_id': self.directory_id,
+            'title': self.title,
+            'artist': self.artist,
+            'year': self.year,
+            'album': self.album,
+            'format': self.format,
+            'size': self.size,
+        }
+
 class Directory(db.Model):
     __tablename__ = "dir"
     id = db.Column(db.Integer, primary_key=True)
-    parent_dir_id = db.Column(db.Integer, db.ForeignKey('dir.id'))
+    parent_dir_id = db.Column(db.Integer, db.ForeignKey('dir.id', ondelete='CASCADE'))
     name = db.Column(db.Text())
     path = db.Column(db.Text())
 
@@ -35,3 +48,11 @@ class Directory(db.Model):
         self.parent_dir_id = parent_dir_id
         self.name = name
         self.path = path
+
+    def serialize(self):
+            return {
+            'id': self.id,
+            'parent_dir_id': self.parent_dir_id,
+            'name': self.name,
+            'path': self.path,
+        }
