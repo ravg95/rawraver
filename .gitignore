@@ -8,3 +8,4 @@ venv/
 storage/
 migrations
 .DS_Store
+js0/

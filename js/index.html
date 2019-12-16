@@ -39,6 +39,10 @@
        vertical-align: middle;
     }
 
+    .player {
+      display: none;
+    }
+
     .box.has-advanced-upload {
       background-color: white;
       outline: 2px dashed black;
@@ -58,6 +62,7 @@
       display: block;
     }
 
+
     body {
       background-repeat:   no-repeat;
       background-position: center end;
@@ -72,7 +77,28 @@
 </head>
 <body onload="loadFiles(1)">
   <div class="container">
-    <div class="jumbotron">
+    <div class="jumbotron" >  <!--Navbar-->
+      <nav class="navbar navbar-expand-lg navbar-dark indigo mb-4">
+
+        <!-- Navbar brand -->
+        <a class="navbar-brand" href="#">RaWaver</a>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+          <form class="form-inline ml-auto">
+            <div class="md-form my-0">
+              <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="searchText">
+            </div>
+            <button href="#!" class="btn btn-outline-white btn-md my-0 ml-sm-2" onclick = "search()">Search</button>
+          </form>
+
+        </div>
+        <!-- Collapsible content -->
+
+      </nav>
+  <!--/.Navbar-->
+
       <h1>Your music-files library</h1>
       <nav aria-label="breadcrumb">
         <div class="breadcrumb" id = "navigation">
@@ -107,7 +133,13 @@
               </div>
             </form>
 
-            <div id="playerId"> <audio id="player"></div>
+            <div id="playerId" class="player">
+              <canvas id = "progress" width="450" height="20"></canvas>
+              <button id="audioControl" onclick="togglePlay()">Play</button>
+              <audio id="player" ontimeupdate="updateBar()"></audio>
+              <span id="current-time"></span> /<span id="duration"></span>
+
+            </div>
           </div>
           <div class="modal-footer" id="infoFooter"></div>
 

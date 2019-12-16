@@ -19,6 +19,7 @@ format = {
 'audio/mid':'midi',
 'audio/midi':'midi',
 'audio/mpeg':'mp3',
+'audio/mp3':'mp3',
 'audio/mp4':'mp4 audio',
 'audio/x-aiff':'aiff',
 'audio/aiff':'aiff',
@@ -45,7 +46,7 @@ from models import Item, Directory
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-STORAGE = '/Users/rafal/PythonProjects/rawraver/storage'
+STORAGE = './storage'
 def checkType(str):
     d = str.split('/')
     if(d[0] == 'audio'):
@@ -71,7 +72,7 @@ def dispDir(id):
 def dispFile(id):
     file = Item.query.filter_by(id = id).one()
     dir = Directory.query.filter_by(id = file.directory_id).one()
-    path = os.path.join(STORAGE, dir.path, dir.name, file.name)
+    path = os.path.join('..',STORAGE, dir.path, dir.name, file.name)
     data = file.serialize()
     data['path'] = path
     return jsonify(data)
@@ -119,6 +120,7 @@ def addFile(dir_id):
             db.session.rollback()
             db.session.flush() # for resetting non-commited .add()
             os.remove(path)
+            print(e)
             return json.dumps({'success':False,'error':'Input data error'}), 412, {'ContentType':'application/json'}
 
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
@@ -151,6 +153,12 @@ def delDir(dir_id):
 
     shutil.rmtree(path)
     return json.dumps({'parent':dir.parent_dir_id}), 200, {'ContentType':'application/json'}
+
+@app.route("/file/search/<string:phrase>", methods = ['GET'])
+@cross_origin()
+def search(phrase):
+    print(phrase)
+    return ""
 
 if __name__ == "__main__":
     app.run()

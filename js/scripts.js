@@ -1,11 +1,15 @@
 var currentDir = 0
 var droppedFile = false
 var boxInitText = ""
+var ctrl = false
+var canvasWidth  = false
+var canvas  = false
+var audioEl = false
 function loadFiles(dir) {
   var request = new XMLHttpRequest()
   currentDir = dir
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://127.0.0.1:8000/dir/'+dir, true)
+  request.open('GET', 'http://10.7.166.179:8000/dir/'+dir, true)
 
   request.onload = function() {
      var data = JSON.parse(this.response)
@@ -34,14 +38,21 @@ function loadFiles(dir) {
        const line = document.createElement('div')
        const ico = document.createElement('span')
        const link = document.createElement('a');
+       const row = document.createElement('div');
+       const col1 = document.createElement('div');
        link.setAttribute('onclick', 'dispFile('+value.id+')');
-       // link.setAttribute('data-toggle', 'modal');
-       // link.setAttribute('href', '#info');
-       link.appendChild(document.createTextNode(value.name));
        ico.setAttribute('class', 'fas fa-wave-square')
        ico.setAttribute('style', 'margin-right: 10px')
+       row.setAttribute('class', 'row')
+       col1.setAttribute('class', 'col')
+       col1.appendChild(ico)
+       col1.appendChild(document.createTextNode(value.name))
+       row.appendChild(col1)
+       row.innerHTML= row.innerHTML+"<div class ='col'>"+value.title+"</div><div class ='col'>"+value.artist+"</div"
+
+       link.appendChild(row);
+
        line.setAttribute('class', 'list-group-item')
-       line.appendChild(ico);
        line.appendChild(link);
        view.appendChild(line);
      }
@@ -114,7 +125,7 @@ function dispFile(id){
   boxInitText = document.getElementById('boxLabel').innerHTML
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://127.0.0.1:8000/file/'+id, true)
+  request.open('GET', 'http://10.7.166.179:8000/file/'+id, true)
 
   request.onload = function() {
     var data = JSON.parse(this.response)
@@ -207,17 +218,9 @@ function dispFile(id){
 function deleteFile(id, dir){
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://127.0.0.1:8000/file/'+id+'/delete', true)
+  request.open('GET', 'http://10.7.166.179:8000/file/'+id+'/delete', true)
   request.send()
   loadNew(dir)
-}
-
-function play(x) {
-  x.play();
-}
-
-function pause(x) {
-  x.pause();
 }
 
 function addFile(dir){
@@ -352,23 +355,25 @@ function modalFooterButtons(id, dir){
 
 function modalAddPlayer(path){
   const ply = document.getElementById('playerId');
+  ply.style.display = "block";
 
-  const player = document.getElementById('player')
-  player.setAttribute('src', "/Users/rafal/PythonProjects/rawraver/storage/rock/Super Tramp/04_-_Breakfast_In_America.mp3");
+  audioEl = document.getElementById('player')
+  audioEl.setAttribute('src', path);
 
-  const b1 = document.createElement('button')
-  b1.setAttribute('onclick', 'play('+player+')')
-  b1.setAttribute('class','btn btn-success btn-sm ')
+  canvasWidth = 450
 
-  b1.innerHTML="Play"
+  canvas = document.getElementById('progress').getContext('2d')
+  ctrl = document.getElementById('audioControl')
 
-  const b2 = document.createElement('button')
-  b2.setAttribute('onclick', 'pause('+player+')')
-  b2.setAttribute('class','btn btn-danger btn-sm ')
-  b2.innerHTML="Pause"
+  audioEl.addEventListener('loadedmetadata', function(){
+    var duration = audioEl.duration
+    var currentTime = audioEl.currentTime
+    document.getElementById('duration').innerHTML = convertElapsedTime(duration)
+    document.getElementById('current-time').innerHTML = convertElapsedTime(currentTime)
+    canvas.fillRect(0,0,canvasWidth, 10);
+  });
 
-  ply.appendChild(b1)
-  ply.appendChild(b2)
+
 }
 
 function addSubmit() {
@@ -381,7 +386,7 @@ function addSubmit() {
 
       $.ajax({
           type: "POST",
-          url: 'http://127.0.0.1:8000/file/add/'+currentDir,
+          url: 'http://10.7.166.179:8000/file/add/'+currentDir,
           data: formData,
           dataType: 'json',
           cache: false,
@@ -414,10 +419,13 @@ var isAdvancedUpload = function() {
 $('.modal').on('hide.bs.modal', function (e) {
   document.getElementById('infoTitle').innerHTML=""
   document.getElementById('infoText').innerHTML = ""
-  document.getElementById('playerId').querySelectorAll('*').forEach(n => n.remove());
+  const ply = document.getElementById('playerId');
+  ply.style.display = "none";
   document.getElementById('infoFooter').querySelectorAll('*').forEach(n => n.remove());
   document.getElementById('box').style.display = 'none';
   document.getElementById('boxLabel').innerHTML=boxInitText
+  if(ctrl.innerHTML === 'Pause')
+    audioEl['pause']()
 })
 
 $(function() {
@@ -455,7 +463,7 @@ function addDirReq(){
 
   $.ajax({
       type: "POST",
-      url: 'http://127.0.0.1:8000/dir/add/'+currentDir,
+      url: 'http://10.7.166.179:8000/dir/add/'+currentDir,
       data: formData,
       dataType: 'json',
       cache: false,
@@ -471,7 +479,7 @@ function delDir(){
   var request = new XMLHttpRequest()
   var parent = false
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://127.0.0.1:8000/dir/delete/'+currentDir, true)
+  request.open('GET', 'http://10.7.166.179:8000/dir/delete/'+currentDir, true)
 
   request.onload = function() {
      var data = JSON.parse(this.response)
@@ -480,4 +488,68 @@ function delDir(){
   }
   request.send()
 
+}
+
+
+function convertElapsedTime(sec){
+  var seconds = Math.floor(sec % 60)
+  if(seconds < 10){
+    seconds = "0"+seconds
+  }
+  var minutes = Math.floor(sec / 60)
+  return minutes+":"+seconds
+}
+
+function togglePlay(){
+  var play = ctrl.innerHTML === 'Play'
+  var method
+
+  if(play){
+    ctrl.innerHTML = "Pause"
+    method = 'play'
+  } else {
+    ctrl.innerHTML = "Play"
+    method = 'pause'
+  }
+  audioEl[method]()
+}
+
+function updateBar(){
+  canvas.clearRect(0,0,canvasWidth, 10);
+  canvas.fillStyle = '#000';
+  canvas.fillRect(0,0,canvasWidth, 10);
+  var currentTime = audioEl.currentTime;
+  var duration = audioEl.duration;
+
+  if(currentTime === duration){
+    ctrl.innerHTML = "Play"
+  }
+
+  document.getElementById('current-time').innerHTML = convertElapsedTime(currentTime)
+  var percentage = currentTime / duration;
+  var progress = (canvasWidth * percentage);
+  canvas.fillStyle = '#FF1244';
+  canvas.fillRect(0,0,progress, 10);
+  canvas.fillStyle = '#FFFFFF';
+  canvas.beginPath()
+  canvas.arc(progress,5, 5,0,2*Math.PI, false)
+  canvas.fill()
+  canvas.lineWidth = 2
+  canvas.strokeStyle = '#FF0000'
+  canvas.stroke()
+}
+
+function search(){
+  const bread = document.getElementById('navigation')
+  var searchText = document.getElementById('searchText').value
+
+  var request = new XMLHttpRequest()
+  // Open a new connection, using the GET request on the URL endpoint
+  request.open('GET', 'http://10.7.166.179:8000/file/search/'+searchText, true)
+
+  request.onload = function() {
+     var data = JSON.parse(this.response)
+     
+  }
+  request.send()
 }
