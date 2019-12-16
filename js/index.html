@@ -39,6 +39,16 @@
        vertical-align: middle;
     }
 
+    .btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
     .player {
       display: none;
     }
@@ -137,8 +147,8 @@
               <canvas id = "progress" width="450" height="20"></canvas>
               <audio id="player" ontimeupdate="updateBar()"></audio>
 
-                <button id="audioControl" onclick="togglePlay()" class="btn btn-default btn-circle">
-                  Play
+                <button id="audioControl" class="btn btn-primary btn-circle" onclick="togglePlay()">
+                  <i class='fas fa-play'></i>
                 </button>
                 <span id="current-time"></span> /<span id="duration"></span>
 

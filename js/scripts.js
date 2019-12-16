@@ -376,7 +376,7 @@ function modalAddPlayer(path){
   c1 = document.getElementById('progress')
   canvas = c1.getContext('2d')
   ctrl = document.getElementById('audioControl')
-  ctrl.innerHTML = "Play"
+  ctrl.innerHTML = "<i class='fas fa-play'></i>"
   audioEl.addEventListener('loadedmetadata', function(){
     var duration = audioEl.duration
     var currentTime = audioEl.currentTime
@@ -476,8 +476,9 @@ function clearModal(){
   document.getElementById('infoFooter').querySelectorAll('*').forEach(n => n.remove());
   document.getElementById('box').style.display = 'none';
   document.getElementById('boxLabel').innerHTML=boxInitText
-  if(ctrl.innerHTML === 'Pause')
+  if(play)
     audioEl['pause']()
+    play = false
 }
 
 $(function() {
@@ -551,17 +552,21 @@ function convertElapsedTime(sec){
   return minutes+":"+seconds
 }
 
+var play = false
 function togglePlay(){
-  var play = ctrl.innerHTML === 'Play'
-  var method
 
-  if(play){
-    ctrl.innerHTML = "Pause"
+  var method
+  console.log(ctrl.innerHTML)
+  if(!play){
+    ctrl.innerHTML = "<i class='fas fa-pause'></i>"
     method = 'play'
+    play = true
   } else {
-    ctrl.innerHTML = "Play"
+    ctrl.innerHTML = "<i class='fas fa-play'></i>"
     method = 'pause'
+    play = false
   }
+  console.log(ctrl.innerHTML)
   audioEl[method]()
 }
 
@@ -573,7 +578,7 @@ function updateBar(){
   var duration = audioEl.duration;
 
   if(currentTime === duration){
-    ctrl.innerHTML = "Play"
+    ctrl.innerHTML = "<i class='fas fa-play'></i>"
   }
 
   document.getElementById('current-time').innerHTML = convertElapsedTime(currentTime)
