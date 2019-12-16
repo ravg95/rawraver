@@ -8,6 +8,15 @@ var audioEl = false
 var dataD = false
 
 var edited = false
+
+var input = document.getElementById("searchText");
+input.addEventListener("keydown", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("searchBtn").click();
+  }
+});
+
 function loadFiles(dir) {
   var request = new XMLHttpRequest()
   currentDir = dir
@@ -208,7 +217,7 @@ function dispFile(id){
     r6.appendChild(r6c2);
     bod.appendChild(r6);
 
-    modalFooterButtons(data.id, data.directory_id)
+    modalFooterButtons(data.id, data.directory_id, data.path)
     dataD = data
     modalAddPlayer(data.path)
 
@@ -332,9 +341,8 @@ function addFile(dir){
 
 }
 
-function modalFooterButtons(id, dir){
+function modalFooterButtons(id, dir, path){
   const foot = document.getElementById('infoFooter')
-
 
   const b2 = document.createElement('button')
   b2.setAttribute('class', 'btn btn-secondary')
@@ -360,13 +368,13 @@ function modalFooterButtons(id, dir){
 function modalAddPlayer(path){
   const ply = document.getElementById('playerId');
   ply.style.display = "block";
-
   audioEl = document.getElementById('player')
-  audioEl.setAttribute('src', path);
+  audioEl.setAttribute('src', '../'+path);
 
   canvasWidth = 450
 
-  canvas = document.getElementById('progress').getContext('2d')
+  c1 = document.getElementById('progress')
+  canvas = c1.getContext('2d')
   ctrl = document.getElementById('audioControl')
   ctrl.innerHTML = "Play"
   audioEl.addEventListener('loadedmetadata', function(){
@@ -377,6 +385,37 @@ function modalAddPlayer(path){
     canvas.fillStyle = '#000';
     canvas.fillRect(0,0,canvasWidth, 11);
   });
+
+  var clicked = false
+
+  c1.addEventListener('mouseup', event => {
+      clicked = false
+  })
+
+  c1.addEventListener('mousedown', event => {
+      clicked = true
+      var rect = c1.getBoundingClientRect();
+      var x = event.clientX - rect.left
+      var y = event.clientY - rect.top
+      moveMusic(x,y)
+  })
+
+  c1.addEventListener('mousemove', event => {
+    if (clicked){
+      var rect = c1.getBoundingClientRect();
+      var x = event.clientX - rect.left
+      var y = event.clientY - rect.top
+      moveMusic(x,y)
+    }
+  })
+
+  function moveMusic(x,y){
+    percentage = 1.0 * x / canvasWidth
+    console.log(percentage)
+    var currTime = Math.floor(audioEl.duration * percentage)
+    console.log(currTime)
+    audioEl.currentTime = currTime
+  }
 
 
 }
@@ -442,9 +481,8 @@ function clearModal(){
 }
 
 $(function() {
-    var images = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg','9.jpg', '10.jpg', '11.jpg', '12.jpg'];
-    ret = './images/' + images[Math.floor(Math.random() * images.length)]
-    document.body.background = ret
+    loadBG()
+    setInterval(loadBG, 25*1000);
 });
 
 function addDir(){
@@ -597,7 +635,7 @@ function search(){
      link.innerHTML="<i class='fas fa-chevron-left' style = 'margin-right: 11px;margin-left: 4px'></i>Back to browsing";
      line.setAttribute('class', 'breadcrumb-item');
      inf.setAttribute('class', 'pull-right');
-     inf.setAttribute('style', 'margin-left: 50em');
+     inf.setAttribute('style', 'margin-left: 49em');
      inf.innerHTML="Results: "+len
      line.appendChild(link);
      node.appendChild(line)
@@ -710,4 +748,10 @@ function editSubmit(id){
   }
   form.submit()
 
+}
+
+function loadBG(){
+  var images = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg','9.jpg', '10.jpg', '11.jpg', '12.jpg'];
+  ret = './images/' + images[Math.floor(Math.random() * images.length)]
+  document.body.background = ret
 }

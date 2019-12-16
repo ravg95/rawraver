@@ -61,7 +61,6 @@
       display: block;
     }
 
-
     body {
       background-repeat:   no-repeat;
       background-position: center end;
@@ -76,11 +75,12 @@
 </head>
 <body onload="loadFiles(1)">
   <div class="container">
-    <div class="jumbotron" >  <!--Navbar-->
+    <div class="jumbotron" style= "background: rgba(255, 255, 255, 0.5);" >  <!--Navbar-->
+
       <nav class="navbar navbar-expand-lg navbar-dark indigo mb-4">
 
         <!-- Navbar brand -->
-        <a class="navbar-brand" href="#">RaWaver</a>
+        <a class="navbar-brand" href = "#" onclick="loadNew(1)">RaWaver</a>
 
         <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -89,7 +89,7 @@
             <div class="md-form my-0">
               <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="searchText">
             </div>
-            <button href="#!" class="btn btn-outline-white btn-md my-0 ml-sm-2" type='button' onclick = "search()">Search</button>
+            <button class="btn btn-outline-white btn-md my-0 ml-sm-2" type='button' onclick = "search()" id = "searchBtn">Search</button>
           </form>
 
         </div>
@@ -97,12 +97,13 @@
 
       </nav>
   <!--/.Navbar-->
-
       <h1>Your music-files library</h1>
+
       <nav aria-label="breadcrumb">
         <div class="breadcrumb" id = "navigation">
         </div>
       </nav>
+
       <div class="list-group" id="files"> </div>
       <div id="addPlace"></div>
     </div>

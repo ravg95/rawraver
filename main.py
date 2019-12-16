@@ -46,7 +46,7 @@ from models import Item, Directory
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-STORAGE = './storage'
+STORAGE = 'storage'
 def checkType(str):
     d = str.split('/')
     if(d[0] == 'audio'):
@@ -72,7 +72,7 @@ def dispDir(id):
 def dispFile(id):
     file = Item.query.filter_by(id = id).one()
     dir = Directory.query.filter_by(id = file.directory_id).one()
-    path = os.path.join('..',STORAGE, dir.path, dir.name, file.name)
+    path = os.path.join(STORAGE, dir.path, dir.name, file.name)
     data = file.serialize()
     data['path'] = path
     return jsonify(data)
