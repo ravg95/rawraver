@@ -46,7 +46,7 @@ from models import Item, Directory
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-STORAGE = 'storage'
+STORAGE = '/Users/rafal/PythonProjects/rawraver/storage'
 def checkType(str):
     d = str.split('/')
     if(d[0] == 'audio'):

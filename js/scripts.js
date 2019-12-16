@@ -217,7 +217,7 @@ function dispFile(id){
     r6.appendChild(r6c2);
     bod.appendChild(r6);
 
-    modalFooterButtons(data.id, data.directory_id, data.path)
+    modalFooterButtons(data.id, data.directory_id, data.path, data.name)
     dataD = data
     modalAddPlayer(data.path)
 
@@ -341,8 +341,12 @@ function addFile(dir){
 
 }
 
-function modalFooterButtons(id, dir, path){
+function modalFooterButtons(id, dir, path, name){
   const foot = document.getElementById('infoFooter')
+  const b1 = document.createElement('button')
+  console.log(name)
+  b1.innerHTML="<a download = "+name+" href = '"+path+"' target = '_blank'>Download</a>"
+  b1.setAttribute('class', 'btn btn-secondary')
 
   const b2 = document.createElement('button')
   b2.setAttribute('class', 'btn btn-secondary')
@@ -360,6 +364,7 @@ function modalFooterButtons(id, dir, path){
   b4.setAttribute('data-dismiss', 'modal')
   b4.innerHTML="Ok"
 
+  foot.appendChild(b1)
   foot.appendChild(b2)
   foot.appendChild(b3)
   foot.appendChild(b4)
@@ -369,7 +374,7 @@ function modalAddPlayer(path){
   const ply = document.getElementById('playerId');
   ply.style.display = "block";
   audioEl = document.getElementById('player')
-  audioEl.setAttribute('src', '../'+path);
+  audioEl.setAttribute('src', path);
 
   canvasWidth = 450
 
@@ -474,6 +479,7 @@ function clearModal(){
   document.getElementById('infoText').innerHTML = ""
   const ply = document.getElementById('playerId');
   ply.style.display = "none";
+  dataD = false
   document.getElementById('infoFooter').querySelectorAll('*').forEach(n => n.remove());
   document.getElementById('box').style.display = 'none';
   document.getElementById('boxLabel').innerHTML=boxInitText
