@@ -411,9 +411,7 @@ function modalAddPlayer(path){
 
   function moveMusic(x,y){
     percentage = 1.0 * x / canvasWidth
-    console.log(percentage)
     var currTime = Math.floor(audioEl.duration * percentage)
-    console.log(currTime)
     audioEl.currentTime = currTime
   }
 
@@ -427,6 +425,9 @@ function addSubmit() {
     if (isAdvancedUpload) {
 
       var formData = new FormData(form);
+      if (!formData['file']) {
+        formData.set( 'file', droppedFile );
+      }
 
       $.ajax({
           type: "POST",
@@ -556,7 +557,6 @@ var play = false
 function togglePlay(){
 
   var method
-  console.log(ctrl.innerHTML)
   if(!play){
     ctrl.innerHTML = "<i class='fas fa-pause'></i>"
     method = 'play'
@@ -566,7 +566,6 @@ function togglePlay(){
     method = 'pause'
     play = false
   }
-  console.log(ctrl.innerHTML)
   audioEl[method]()
 }
 
@@ -670,7 +669,6 @@ function editFile(id) {
     r1.appendChild(r1c1);
     r1.appendChild(r1c2);
     bod.appendChild(r1);
-    console.log(dataD.title)
 
     const r2 = document.createElement('div')
     const r2c1 = document.createElement('div')
