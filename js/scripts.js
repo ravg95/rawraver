@@ -21,7 +21,7 @@ function loadFiles(dir) {
   var request = new XMLHttpRequest()
   currentDir = dir
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://10.7.166.179:8000/dir/'+dir, true)
+  request.open('GET', 'http://127.0.0.1:8000/dir/'+dir, true)
 
   request.onload = function() {
      var data = JSON.parse(this.response)
@@ -137,7 +137,7 @@ function dispFile(id){
   boxInitText = document.getElementById('boxLabel').innerHTML
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://10.7.166.179:8000/file/'+id, true)
+  request.open('GET', 'http://127.0.0.1:8000/file/'+id, true)
 
   request.onload = function() {
     var data = JSON.parse(this.response)
@@ -230,7 +230,7 @@ function dispFile(id){
 function deleteFile(id, dir){
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://10.7.166.179:8000/file/'+id+'/delete', true)
+  request.open('GET', 'http://127.0.0.1:8000/file/'+id+'/delete', true)
   request.send()
   loadNew(dir)
 }
@@ -430,7 +430,7 @@ function addSubmit() {
 
       $.ajax({
           type: "POST",
-          url: 'http://10.7.166.179:8000/file/add/'+currentDir,
+          url: 'http://127.0.0.1:8000/file/add/'+currentDir,
           data: formData,
           dataType: 'json',
           cache: false,
@@ -514,7 +514,7 @@ function addDirReq(){
 
   $.ajax({
       type: "POST",
-      url: 'http://10.7.166.179:8000/dir/add/'+currentDir,
+      url: 'http://127.0.0.1:8000/dir/add/'+currentDir,
       data: formData,
       dataType: 'json',
       cache: false,
@@ -530,7 +530,7 @@ function delDir(){
   var request = new XMLHttpRequest()
   var parent = false
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://10.7.166.179:8000/dir/delete/'+currentDir, true)
+  request.open('GET', 'http://127.0.0.1:8000/dir/delete/'+currentDir, true)
 
   request.onload = function() {
      var data = JSON.parse(this.response)
@@ -597,7 +597,7 @@ function search(){
 
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
-  request.open('GET', 'http://10.7.166.179:8000/file/search/'+searchText, true)
+  request.open('GET', 'http://127.0.0.1:8000/file/search/'+searchText, true)
 
   request.onload = function() {
      var data = JSON.parse(this.response)
@@ -727,7 +727,7 @@ function editSubmit(id){
 
       $.ajax({
           type: "POST",
-          url: 'http://10.7.166.179:8000/file/edit/'+id,
+          url: 'http://127.0.0.1:8000/file/edit/'+id,
           data: formData,
           dataType: 'json',
           cache: false,
