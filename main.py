@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import func
 import sys
 import json
+from flask import send_file
 from flask import jsonify
 from flask_heroku import Heroku
 from flask_cors import CORS, cross_origin
@@ -190,6 +191,18 @@ def editFile(file_id):
 
     db.session.commit()
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+@app.route("/file/download/<int:id>", methods = ['POST', 'GET'])
+@cross_origin()
+def downloadFile(id):
+    file = Item.query.filter_by(id = id).one()
+    dir = Directory.query.filter_by(id = file.directory_id).one()
+    path = os.path.join(STORAGE, dir.path, dir.name, file.name)
+    try:
+        return send_file(path, attachment_filename=file.name)
+    except Exception as e:
+        return str(e)
+
 
 if __name__ == "__main__":
     app.run()
