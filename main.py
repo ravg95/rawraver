@@ -127,6 +127,7 @@ def addFile(dir_id):
     else:
         return json.dumps({'success':False,'error':'Unknown input data error'}), 420, {'ContentType':'application/json'}
 
+
 @app.route("/dir/add/<int:dir_id>", methods = ['POST'])
 @cross_origin()
 def addDir(dir_id):
@@ -177,6 +178,18 @@ def search(phrase):
 
     return jsonify(files=[e.serialize() for e in nFiles])
 
+@app.route("/file/edit/<int:file_id>", methods = ['POST'])
+@cross_origin()
+def editFile(file_id):
+    file = Item.query.filter_by(id = file_id).one()
+
+    file.title = request.form.get('title')
+    file.artist = request.form.get('artist')
+    file.album = request.form.get('album')
+    file.year = request.form.get('year')
+
+    db.session.commit()
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 if __name__ == "__main__":
     app.run()

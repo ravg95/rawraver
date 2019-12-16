@@ -42,7 +42,6 @@
     .player {
       display: none;
     }
-
     .box.has-advanced-upload {
       background-color: white;
       outline: 2px dashed black;
@@ -135,9 +134,12 @@
 
             <div id="playerId" class="player">
               <canvas id = "progress" width="450" height="20"></canvas>
-              <button id="audioControl" onclick="togglePlay()">Play</button>
               <audio id="player" ontimeupdate="updateBar()"></audio>
-              <span id="current-time"></span> /<span id="duration"></span>
+
+                <button id="audioControl" onclick="togglePlay()">
+                  Play
+                </button>
+                <span id="current-time"></span> /<span id="duration"></span>
 
             </div>
           </div>

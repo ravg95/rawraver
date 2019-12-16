@@ -5,6 +5,9 @@ var ctrl = false
 var canvasWidth  = false
 var canvas  = false
 var audioEl = false
+var dataD = false
+
+var edited = false
 function loadFiles(dir) {
   var request = new XMLHttpRequest()
   currentDir = dir
@@ -206,7 +209,7 @@ function dispFile(id){
     bod.appendChild(r6);
 
     modalFooterButtons(data.id, data.directory_id)
-
+    dataD = data
     modalAddPlayer(data.path)
 
   }
@@ -335,6 +338,7 @@ function modalFooterButtons(id, dir){
 
   const b2 = document.createElement('button')
   b2.setAttribute('class', 'btn btn-secondary')
+  b2.setAttribute('onclick', 'editFile('+id+')');
   b2.innerHTML="Edit"
 
   const b3 = document.createElement('button')
@@ -364,13 +368,14 @@ function modalAddPlayer(path){
 
   canvas = document.getElementById('progress').getContext('2d')
   ctrl = document.getElementById('audioControl')
-
+  ctrl.innerHTML = "Play"
   audioEl.addEventListener('loadedmetadata', function(){
     var duration = audioEl.duration
     var currentTime = audioEl.currentTime
     document.getElementById('duration').innerHTML = convertElapsedTime(duration)
     document.getElementById('current-time').innerHTML = convertElapsedTime(currentTime)
-    canvas.fillRect(0,0,canvasWidth, 10);
+    canvas.fillStyle = '#000';
+    canvas.fillRect(0,0,canvasWidth, 11);
   });
 
 
@@ -417,6 +422,14 @@ var isAdvancedUpload = function() {
 }();
 
 $('.modal').on('hide.bs.modal', function (e) {
+  clearModal()
+  if(edited === true) {
+    edited = false
+    loadNew(currentDir)
+  }
+})
+
+function clearModal(){
   document.getElementById('infoTitle').innerHTML=""
   document.getElementById('infoText').innerHTML = ""
   const ply = document.getElementById('playerId');
@@ -426,7 +439,7 @@ $('.modal').on('hide.bs.modal', function (e) {
   document.getElementById('boxLabel').innerHTML=boxInitText
   if(ctrl.innerHTML === 'Pause')
     audioEl['pause']()
-})
+}
 
 $(function() {
     var images = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg','9.jpg', '10.jpg', '11.jpg', '12.jpg'];
@@ -515,9 +528,9 @@ function togglePlay(){
 }
 
 function updateBar(){
-  canvas.clearRect(0,0,canvasWidth, 10);
+  canvas.clearRect(0,0,canvasWidth, 11);
   canvas.fillStyle = '#000';
-  canvas.fillRect(0,0,canvasWidth, 10);
+  canvas.fillRect(0,0,canvasWidth, 11);
   var currentTime = audioEl.currentTime;
   var duration = audioEl.duration;
 
@@ -529,7 +542,7 @@ function updateBar(){
   var percentage = currentTime / duration;
   var progress = (canvasWidth * percentage);
   canvas.fillStyle = '#FF1244';
-  canvas.fillRect(0,0,progress, 10);
+  canvas.fillRect(0,0,progress, 11);
   canvas.fillStyle = '#FFFFFF';
   canvas.beginPath()
   canvas.arc(progress,5, 5,0,2*Math.PI, false)
@@ -592,4 +605,109 @@ function search(){
 
   }
   request.send()
+}
+
+function editFile(id) {
+  if(id === dataD.id) {
+    clearModal()
+    const tit = document.getElementById('infoTitle');
+    tit.appendChild(document.createTextNode(dataD.name));
+    const bod = document.getElementById('infoText');
+    bod.innerHTML = ""
+
+    const r1 = document.createElement('div')
+    const r1c1 = document.createElement('div')
+    const r1c2 = document.createElement('div')
+    r1.setAttribute('class', 'row');
+    r1.setAttribute('style', 'margin: 2px');
+    r1c1.setAttribute('class', 'col');
+    r1c2.setAttribute('class', 'col');
+    r1c1.innerHTML = "Title:"
+    r1c2.innerHTML = "<input type='text' name='title' value='"+dataD.title+"'>"
+    r1.appendChild(r1c1);
+    r1.appendChild(r1c2);
+    bod.appendChild(r1);
+    console.log(dataD.title)
+
+    const r2 = document.createElement('div')
+    const r2c1 = document.createElement('div')
+    const r2c2 = document.createElement('div')
+    r2.setAttribute('class', 'row');
+    r2.setAttribute('style', 'margin: 2px');
+    r2c1.setAttribute('class', 'col');
+    r2c2.setAttribute('class', 'col');
+    r2c1.innerHTML = "Artist:"
+    r2c2.innerHTML = "<input type='text' name='artist' value='"+dataD.artist+"'>"
+    r2.appendChild(r2c1);
+    r2.appendChild(r2c2);
+    bod.appendChild(r2);
+
+    const r3 = document.createElement('div')
+    const r3c1 = document.createElement('div')
+    const r3c2 = document.createElement('div')
+    r3.setAttribute('class', 'row');
+    r3.setAttribute('style', 'margin: 2px');
+    r3c1.setAttribute('class', 'col');
+    r3c2.setAttribute('class', 'col');
+    r3c1.innerHTML = "Album:"
+    r3c2.innerHTML = "<input type='text' name='album' value='"+dataD.album+"'>"
+    r3.appendChild(r3c1);
+    r3.appendChild(r3c2);
+    bod.appendChild(r3);
+
+    const r4 = document.createElement('div')
+    const r4c1 = document.createElement('div')
+    const r4c2 = document.createElement('div')
+    r4.setAttribute('class', 'row');
+    r4.setAttribute('style', 'margin: 2px');
+    r4c1.setAttribute('class', 'col');
+    r4c2.setAttribute('class', 'col');
+    r4c1.innerHTML = "Year:"
+    r4c2.innerHTML = "<input type='text' name='year' value='"+dataD.year+"'>"
+    r4.appendChild(r4c1);
+    r4.appendChild(r4c2);
+    bod.appendChild(r4);
+
+
+    const butt = document.createElement('button')
+    butt.setAttribute('class', 'btn btn-primary')
+    butt.setAttribute('onclick', 'editSubmit('+id+')')
+    butt.innerHTML="Save"
+
+    const foot = document.getElementById('infoFooter')
+    foot.appendChild(butt)
+  }
+  dataD = false
+}
+
+function editSubmit(id){
+  form = document.getElementById("addForm")
+
+  form.submit = function() {
+      edited = true
+      var formData = new FormData(form);
+
+      $.ajax({
+          type: "POST",
+          url: 'http://10.7.166.179:8000/file/edit/'+id,
+          data: formData,
+          dataType: 'json',
+          cache: false,
+          contentType: false,
+          processData: false,
+          complete: function() {
+            clearModal()
+            dispFile(id)
+          },
+          success: function(data) {
+            //
+          },
+          error: function() {
+           // Log the error, show an alert, whatever works for you
+          }
+        });
+      return false;
+  }
+  form.submit()
+
 }
