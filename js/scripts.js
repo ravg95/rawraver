@@ -542,6 +542,7 @@ function updateBar(){
 function search(){
   const bread = document.getElementById('navigation')
   var searchText = document.getElementById('searchText').value
+  clear()
 
   var request = new XMLHttpRequest()
   // Open a new connection, using the GET request on the URL endpoint
@@ -549,7 +550,46 @@ function search(){
 
   request.onload = function() {
      var data = JSON.parse(this.response)
-     
+     var len = data.files.length
+     data.files.forEach(showFile);
+     function showFile(value, index, array){
+       const view = document.getElementById('files')
+       const line = document.createElement('div')
+       const ico = document.createElement('span')
+       const link = document.createElement('a');
+       const row = document.createElement('div');
+       const col1 = document.createElement('div');
+       link.setAttribute('onclick', 'dispFile('+value.id+')');
+       ico.setAttribute('class', 'fas fa-wave-square')
+       ico.setAttribute('style', 'margin-right: 10px')
+       row.setAttribute('class', 'row')
+       col1.setAttribute('class', 'col')
+       col1.appendChild(ico)
+       col1.appendChild(document.createTextNode(value.name))
+       row.appendChild(col1)
+       row.innerHTML= row.innerHTML+"<div class ='col'>"+value.title+"</div><div class ='col'>"+value.artist+"</div>"
+
+       link.appendChild(row);
+
+       line.setAttribute('class', 'list-group-item')
+       line.appendChild(link);
+       view.appendChild(line);
+     }
+
+     const node = document.getElementById("navigation");
+     const inf = document.createElement('div')
+     const line = document.createElement('div')
+     const link = document.createElement('a');
+     link.setAttribute('onclick', 'loadNew('+currentDir+')');
+     link.innerHTML="<i class='fas fa-chevron-left' style = 'margin-right: 11px;margin-left: 4px'></i>Back to browsing";
+     line.setAttribute('class', 'breadcrumb-item');
+     inf.setAttribute('class', 'pull-right');
+     inf.setAttribute('style', 'margin-left: 50em');
+     inf.innerHTML="Results: "+len
+     line.appendChild(link);
+     node.appendChild(line)
+     node.appendChild(inf)
+
   }
   request.send()
 }

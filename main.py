@@ -157,8 +157,26 @@ def delDir(dir_id):
 @app.route("/file/search/<string:phrase>", methods = ['GET'])
 @cross_origin()
 def search(phrase):
-    print(phrase)
-    return ""
+
+    files = Item.query.filter(Item.title.ilike('%' + phrase + '%')).all()
+    files1 = Item.query.filter(Item.artist.ilike('%' + phrase + '%')).all()
+    files2 = Item.query.filter(Item.name.ilike('%' + phrase + '%')).all()
+    files3 = Item.query.filter(Item.album.ilike('%' + phrase + '%')).all()
+    files4 = Item.query.filter(Item.format.ilike('%' + phrase + '%')).all()
+    files+=files1
+    files+=files2
+    files+=files3
+    files+=files4
+    if(phrase.isdigit()):
+        if(int(phrase)>=1900 and int(phrase)<=2030):
+            files5 = Item.query.filter(Item.year.ilike('%' + phrase + '%')).all()
+            files+=files5
+
+    nFiles = list(dict.fromkeys(files))
+
+
+    return jsonify(files=[e.serialize() for e in nFiles])
+
 
 if __name__ == "__main__":
     app.run()
