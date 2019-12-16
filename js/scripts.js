@@ -65,6 +65,7 @@ function loadFiles(dir) {
        link.appendChild(row);
 
        line.setAttribute('class', 'list-group-item')
+       line.setAttribute('style', 'background-color: rgba(255, 255, 255, 0.9)')
        line.appendChild(link);
        view.appendChild(line);
      }
@@ -490,7 +491,7 @@ function clearModal(){
 
 $(function() {
     loadBG()
-    setInterval(loadBG, 25*1000);
+    setInterval(loadBG, 20*1000);
 });
 
 function addDir(){
@@ -633,6 +634,7 @@ function search(){
        link.appendChild(row);
 
        line.setAttribute('class', 'list-group-item')
+       line.setAttribute('style', 'background-color: rgba(255, 255, 255, 0.95)')
        line.appendChild(link);
        view.appendChild(line);
      }
